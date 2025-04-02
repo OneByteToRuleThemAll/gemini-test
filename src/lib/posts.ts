@@ -6,7 +6,7 @@ import html from 'remark-html';
 
 const postsDirectory = path.join(process.cwd(), 'content/posts');
 
-// For client components - Query keys
+// Query keys for React Query
 export const queryKeys = {
   posts: {
     all: ['posts'] as const,
@@ -16,106 +16,118 @@ export const queryKeys = {
   },
 };
 
-// Get all post IDs for static generation
-export async function getAllPostIds() {
-  try {
-    const fileNames = fs.readdirSync(postsDirectory);
-    
-    return fileNames.map((fileName) => {
-      return {
-        id: fileName.replace(/\.md$/, ''),
-      };
-    });
-  } catch (error) {
-    console.error('Error getting all post IDs:', error);
-    return [];
-  }
+export interface PostMetadata {
+  id: string;
+  title: string;
+  date: string;
+  tags?: string[];
 }
 
-// Utility function to read and parse a post file
-export async function getPostData(id: string) {
-  const fullPath = path.join(postsDirectory, `${id}.md`);
-  
-  try {
+export interface Post extends PostMetadata {
+  contentHtml: string;
+}
+
+export function getSortedPostsData(): PostMetadata[] {
+  // Get file names under /posts
+  const fileNames = fs.readdirSync(postsDirectory);
+  const allPostsData = fileNames.map((fileName) => {
+    // Remove ".md" from file name to get id
+    const id = fileName.replace(/\.md$/, '');
+
+    // Read markdown file as string
+    const fullPath = path.join(postsDirectory, fileName);
     const fileContents = fs.readFileSync(fullPath, 'utf8');
+
+    // Use gray-matter to parse the post metadata section
     const matterResult = matter(fileContents);
-    
-    const processedContent = await remark()
-      .use(html)
-      .process(matterResult.content);
-    const contentHtml = processedContent.toString();
-    
+
+    // Combine the data with the id
     return {
       id,
-      contentHtml,
-      ...matterResult.data,
-    } as {
-      id: string;
-      contentHtml: string;
-      title: string;
-      date: string;
-      tags?: string[];
+      title: matterResult.data.title,
+      date: matterResult.data.date,
+      tags: matterResult.data.tags || [],
     };
-  } catch (error) {
-    console.error(`Error reading post ${id}:`, error);
-    return null;
-  }
+  });
+
+  // Sort posts by date
+  return allPostsData.sort((a, b) => {
+    if (a.date < b.date) {
+      return 1;
+    } else {
+      return -1;
+    }
+  });
 }
 
-// Get all post metadata for listings
-export async function getSortedPostsData() {
-  try {
-    const fileNames = fs.readdirSync(postsDirectory);
-    const allPostsData = await Promise.all(fileNames.map(async (fileName) => {
-      const id = fileName.replace(/\.md$/, '');
-      const fullPath = path.join(postsDirectory, fileName);
-      const fileContents = fs.readFileSync(fullPath, 'utf8');
-      
-      const matterResult = matter(fileContents);
-      
-      return {
-        id,
-        ...matterResult.data as { 
-          date: string;
-          title: string;
-          tags?: string[];
-        },
-      };
-    }));
-    
-    return allPostsData.sort(({ date: a }, { date: b }) => {
-      if (a < b) {
-        return 1;
-      } else {
-        return -1;
-      }
-    });
-  } catch (error) {
-    console.error('Error getting sorted posts data:', error);
-    return [];
-  }
+export function getAllPostIds() {
+  const fileNames = fs.readdirSync(postsDirectory);
+
+  return fileNames.map((fileName) => {
+    return {
+      params: {
+        id: fileName.replace(/\.md$/, ''),
+      },
+    };
+  });
 }
 
-// Get posts by tag
-export async function getPostsByTag(tag: string) {
-  const allPosts = await getSortedPostsData();
-  return allPosts.filter((post) => 
-    post.tags?.some((postTag) => 
-      postTag.toLowerCase() === tag.toLowerCase()
-    )
+export async function getPostData(id: string): Promise<Post> {
+  const fullPath = path.join(postsDirectory, `${id}.md`);
+  const fileContents = fs.readFileSync(fullPath, 'utf8');
+
+  // Use gray-matter to parse the post metadata section
+  const matterResult = matter(fileContents);
+
+  // Use remark to convert markdown into HTML string
+  const processedContent = await remark()
+    .use(html)
+    .process(matterResult.content);
+  const contentHtml = processedContent.toString();
+
+  // Combine the data with the id and contentHtml
+  return {
+    id,
+    contentHtml,
+    title: matterResult.data.title,
+    date: matterResult.data.date,
+    tags: matterResult.data.tags || [],
+  };
+}
+
+export async function getPostsByTag(tag: string): Promise<PostMetadata[]> {
+  const allPosts = getSortedPostsData();
+  return allPosts.filter(post => 
+    post.tags && post.tags.some(t => t.toLowerCase() === tag.toLowerCase())
   );
 }
 
-// Get all unique tags
-export async function getAllTags() {
-  const allPosts = await getSortedPostsData();
+export async function getAllTags(): Promise<string[]> {
+  const posts = getSortedPostsData();
   const tagsSet = new Set<string>();
   
-  allPosts.forEach(post => {
-    if (post.tags) {
-      post.tags.forEach(tag => tagsSet.add(tag.toLowerCase()));
+  posts.forEach(post => {
+    if (post.tags && Array.isArray(post.tags)) {
+      post.tags.forEach(tag => tagsSet.add(tag));
     }
   });
   
   return Array.from(tagsSet);
+}
+
+// Function to get recent posts
+export async function getRecentPosts(count: number = 5): Promise<PostMetadata[]> {
+  const allPosts = getSortedPostsData();
+  return allPosts.slice(0, count);
+}
+
+// Function to search posts by query
+export async function searchPosts(query: string): Promise<PostMetadata[]> {
+  const allPosts = getSortedPostsData();
+  const searchLower = query.toLowerCase();
+  
+  return allPosts.filter(post => 
+    post.title.toLowerCase().includes(searchLower) || 
+    (post.tags && post.tags.some(tag => tag.toLowerCase().includes(searchLower)))
+  );
 }

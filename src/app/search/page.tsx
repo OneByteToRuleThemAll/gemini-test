@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { searchPosts } from '../../lib/posts';
+import { searchPosts } from '@/lib/posts';
 import SearchBar from '../../components/SearchBar';
 
 export const metadata: Metadata = {
