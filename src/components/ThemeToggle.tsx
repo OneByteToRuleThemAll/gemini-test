@@ -1,63 +1,126 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function ThemeToggle() {
-  // Initialize with undefined to prevent hydration mismatch
-  const [darkMode, setDarkMode] = useState<boolean | undefined>(undefined);
+  const [mounted, setMounted] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+  const hydrationErrorLogged = useRef(false);
   
   // Handle theme initialization on client side only
   useEffect(() => {
-    // Check if user has a theme preference in localStorage
-    const storedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
-      document.documentElement.classList.add('dark');
-      setDarkMode(true);
-    } else {
-      document.documentElement.classList.remove('dark');
-      setDarkMode(false);
-    }
-    
-    // Listen for system preference changes
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = (e: MediaQueryListEvent) => {
-      // Only update if user hasn't set a preference
-      if (!localStorage.getItem('theme')) {
-        if (e.matches) {
-          document.documentElement.classList.add('dark');
-          setDarkMode(true);
-        } else {
-          document.documentElement.classList.remove('dark');
-          setDarkMode(false);
-        }
+    try {
+      setMounted(true);
+      
+      // Check if user has a theme preference in localStorage
+      const storedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      const isDarkMode = storedTheme === 'dark' || (!storedTheme && prefersDark);
+      
+      if (isDarkMode) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
       }
-    };
-    
-    // Add event listener
-    mediaQuery.addEventListener('change', handleChange);
-    
-    // Clean up
-    return () => mediaQuery.removeEventListener('change', handleChange);
+      
+      setDarkMode(isDarkMode);
+      
+      // Listen for system preference changes
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const handleChange = (e: MediaQueryListEvent) => {
+        // Only update if user hasn't set a preference
+        if (!localStorage.getItem('theme')) {
+          const newDarkMode = e.matches;
+          setDarkMode(newDarkMode);
+          
+          if (newDarkMode) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        }
+      };
+      
+      // Add event listener
+      mediaQuery.addEventListener('change', handleChange);
+      
+      // Clean up
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    } catch (error) {
+      logHydrationError('ThemeToggle initialization error', error);
+      setDarkMode(false);
+      document.documentElement.classList.remove('dark');
+    }
   }, []);
   
   const toggleTheme = () => {
-    if (darkMode) {
-      // Switch to light mode
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-      setDarkMode(false);
-    } else {
-      // Switch to dark mode
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-      setDarkMode(true);
+    try {
+      const newDarkMode = !darkMode;
+      setDarkMode(newDarkMode);
+      
+      if (newDarkMode) {
+        // Switch to dark mode
+        document.documentElement.classList.add('dark');
+        document.body.classList.add('dark-mode'); // Add this class for additional styling
+        localStorage.setItem('theme', 'dark');
+        console.log('Dark mode enabled'); // For debugging
+      } else {
+        // Switch to light mode
+        document.documentElement.classList.remove('dark');
+        document.body.classList.remove('dark-mode'); // Remove class for light mode
+        localStorage.setItem('theme', 'light');
+        console.log('Light mode enabled'); // For debugging
+      }
+      
+      // Force a re-layout/repaint to apply Tailwind dark mode classes
+      document.body.style.display = 'none';
+      // Reading this property causes a reflow
+      void document.body.offsetHeight; 
+      document.body.style.display = '';
+      
+    } catch (error) {
+      logHydrationError('Theme toggle error', error);
     }
   };
   
-  // Don't render until we know the theme (client-side only)
-  if (darkMode === undefined) return null;
+  // Helper function to log hydration and other errors
+  const logHydrationError = (context: string, error: any) => {
+    if (!hydrationErrorLogged.current) {
+      hydrationErrorLogged.current = true;
+      
+      const errorData = {
+        message: error?.message || 'Unknown error',
+        name: error?.name || 'Error',
+        stack: error?.stack || '',
+        componentStack: 'ThemeToggle Component',
+        context: context,
+        url: typeof window !== 'undefined' ? window.location.href : '',
+        userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : '',
+        timestamp: new Date().toISOString(),
+        htmlClasses: typeof document !== 'undefined' ? document.documentElement.className : '',
+        darkModeState: darkMode
+      };
+      
+      // Send error to our logging endpoint
+      fetch('/api/log-error', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(errorData),
+      }).catch(e => console.error('Failed to log error:', e));
+      
+      console.error('ThemeToggle Error:', context, error);
+    }
+  };
+  
+  // Render a simple placeholder until client-side hydration is complete
+  if (!mounted) {
+    return (
+      <div className="w-10 h-10 rounded-full bg-gray-100 shadow-md"></div>
+    );
+  }
   
   return (
     <button 

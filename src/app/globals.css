@@ -1,21 +1,31 @@
 @import "tailwindcss";
 
+/* K-pop dream light mode - vibrant and colorful base variables */
 :root {
-  --background: #ffffff;
+  --background: linear-gradient(135deg, #fef9f9, #f5e6fa, #e8f5fe);
   --foreground: #171717;
-  --card-bg: #f8f9fa;
-  --card-border: #e9ecef;
-  --heading: #111111;
-  --muted: #6c757d;
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --card-border: #ffd1fc;
+  --heading: #9900cc;
+  --muted: #8e67d0;
+  --glamour-glow: 0 0 20px rgba(255, 105, 180, 0.5);
+  --accent-gradient: linear-gradient(45deg, #ff00cc, #3399ff);
+  --accent-shadow: 0 5px 15px rgba(255, 20, 147, 0.4);
+  --border-rainbow: linear-gradient(90deg, #ff00cc, #ff6600, #ffcc00, #33cc33, #3399ff, #9933ff);
 }
 
-.dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  --card-bg: #1a1a1a;
+/* Dark mode variables - sleek and traditional */
+html.dark {
+  --background: #050505;
+  --foreground: #f0f0f0;
+  --card-bg: #121212;
   --card-border: #333333;
   --heading: #ffffff;
-  --muted: #adb5bd;
+  --muted: #a0a0a0;
+  --glamour-glow: none;
+  --accent-gradient: none;
+  --accent-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  --border-rainbow: none;
 }
 
 @theme inline {
@@ -25,41 +35,68 @@
   --font-mono: var(--font-geist-mono);
 }
 
-/* This is now a fallback for users without JS */
+/* Only apply media query for initial/default theme before JS loads */
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --card-bg: #1a1a1a;
+    --background: #050505;
+    --foreground: #f0f0f0;
+    --card-bg: #121212;
     --card-border: #333333;
     --heading: #ffffff;
-    --muted: #adb5bd;
+    --muted: #a0a0a0;
+    --glamour-glow: none;
+    --accent-gradient: none;
+    --accent-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    --border-rainbow: none;
   }
 }
 
+/* Base styles that apply to both light and dark mode */
 body {
-  background-color: var(--background);
+  background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background 0.5s ease, color 0.3s ease, box-shadow 0.5s ease;
 }
 
+/* Enhanced light mode styling with k-pop flair */
+body:not(.dark-mode) {
+  background-attachment: fixed;
+}
+
+/* Headers with vibrant colors in light mode */
 h1, h2, h3, h4, h5, h6 {
   color: var(--heading);
+  transition: color 0.3s ease, text-shadow 0.5s ease;
 }
 
-/* Add these base styles to ensure dark mode applies more universally */
-.dark body {
-  background-color: var(--background);
-  color: var(--foreground);
+/* Add glamour to headers in light mode */
+:root:not(.dark) h1,
+:root:not(.dark) h2 {
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow: var(--glamour-glow);
 }
 
-/* Ensure cards, containers and other elements properly respect dark mode */
-.card, .container, article, section {
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+/* General element transitions */
+p, span, div, a, button {
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.5s ease;
 }
 
-/* Fix for elements that might be using hard-coded colors */
-.dark :where(div, p, span, a, button) {
-  color-scheme: dark;
+/* Enhanced dark mode styling */
+html.dark body {
+  background: var(--background) !important;
+  color: var(--foreground) !important;
+  box-shadow: none !important;
+}
+
+/* Rainbow borders for cards in light mode */
+:root:not(.dark) .card,
+:root:not(.dark) article,
+/* Additional Tailwind dark mode helper to ensure dark mode works */
+@layer components {
+  .force-dark {
+    @apply dark:text-white dark:bg-gray-900;
+  }
 }
