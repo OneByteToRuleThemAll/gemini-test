@@ -34,21 +34,29 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${montserrat.variable} ${playfair.variable}`}>
-      <body className="bg-gradient-to-br from-primary-50 to-white dark:from-gray-950 dark:to-gray-900 dark:text-white transition-colors duration-300 min-h-screen">
-        <Script id="theme-script" strategy="beforeInteractive">
-          {`
-            (function() {
-              // Check if theme preference exists in localStorage
-              const theme = localStorage.getItem('theme') || 'light';
-              const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-              
-              // Apply the theme class to the document
-              if (theme === 'dark' || (!theme && prefersDark)) {
-                document.documentElement.classList.add('dark');
+      <head>
+        {/* This script runs before any React hydration, preventing flash of wrong theme */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                const theme = localStorage.getItem('theme');
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                
+                if (theme === 'dark' || (!theme && prefersDark)) {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              } catch (e) {
+                // Fail gracefully if localStorage is not available
+                console.log('Unable to check theme preference');
               }
-            })()
-          `}
-        </Script>
+            `,
+          }}
+        />
+      </head>
+      <body className="bg-gradient-to-br from-primary-50 to-white dark:from-gray-950 dark:to-gray-900 dark:text-white transition-colors duration-300 min-h-screen">
         <div className="relative">
           <div className="absolute inset-0 bg-glamour-gradient opacity-10 dark:opacity-5 -z-10"></div>
           <Navigation />

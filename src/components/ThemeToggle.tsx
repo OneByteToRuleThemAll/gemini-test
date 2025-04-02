@@ -3,20 +3,21 @@
 import { useState, useEffect } from 'react';
 
 export default function ThemeToggle() {
-  const [darkMode, setDarkMode] = useState(false);
+  // Initialize with undefined to prevent hydration mismatch
+  const [darkMode, setDarkMode] = useState<boolean | undefined>(undefined);
   
-  // Initialize theme from localStorage on component mount
+  // Handle theme initialization on client side only
   useEffect(() => {
     // Check if user has a theme preference in localStorage
     const storedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     
     if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
-      setDarkMode(true);
       document.documentElement.classList.add('dark');
+      setDarkMode(true);
     } else {
-      setDarkMode(false);
       document.documentElement.classList.remove('dark');
+      setDarkMode(false);
     }
   }, []);
   
@@ -33,6 +34,9 @@ export default function ThemeToggle() {
       setDarkMode(true);
     }
   };
+  
+  // Don't render until we know the theme (client-side only)
+  if (darkMode === undefined) return null;
   
   return (
     <button 
