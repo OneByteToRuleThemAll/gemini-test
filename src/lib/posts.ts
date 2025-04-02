@@ -1,5 +1,3 @@
-'use server';
-
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
@@ -8,128 +6,116 @@ import html from 'remark-html';
 
 const postsDirectory = path.join(process.cwd(), 'content/posts');
 
-export async function getSortedPostsData() {
-  // Get file names under /posts
-  const fileNames = fs.readdirSync(postsDirectory);
-  const allPostsData = fileNames.map((fileName) => {
-    // Remove ".md" from file name to get id
-    const id = fileName.replace(/\.md$/, '');
+// For client components - Query keys
+export const queryKeys = {
+  posts: {
+    all: ['posts'] as const,
+    byId: (id: string) => ['posts', id] as const,
+    byTag: (tag: string) => ['posts', 'tag', tag] as const,
+    tags: ['posts', 'tags'] as const,
+  },
+};
 
-    // Read markdown file as string
-    const fullPath = path.join(postsDirectory, fileName);
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
-
-    // Use gray-matter to parse the post metadata section
-    const matterResult = matter(fileContents);
-
-    // Combine the data with the id
-    return {
-      id,
-      ...(matterResult.data as { 
-        date: string; 
-        title: string; 
-        tags?: string[] 
-      }),
-    };
-  });
-  // Sort posts by date
-  return allPostsData.sort((a, b) => {
-    if (a.date < b.date) {
-      return 1;
-    } else {
-      return -1;
-    }
-  });
-}
-
+// Get all post IDs for static generation
 export async function getAllPostIds() {
-  const fileNames = fs.readdirSync(postsDirectory);
-  // Returns an array that looks like:
-  // [
-  //   {
-  //     params: {
-  //       id: 'ssg-ssr'
-  //     }
-  //   },
-  //   {
-  //     params: {
-  //       id: 'pre-rendering'
-  //     }
-  //   }
-  // ]
-  return fileNames.map((fileName) => {
-    return {
-      params: {
+  try {
+    const fileNames = fs.readdirSync(postsDirectory);
+    
+    return fileNames.map((fileName) => {
+      return {
         id: fileName.replace(/\.md$/, ''),
-      },
-    };
-  });
+      };
+    });
+  } catch (error) {
+    console.error('Error getting all post IDs:', error);
+    return [];
+  }
 }
 
+// Utility function to read and parse a post file
 export async function getPostData(id: string) {
   const fullPath = path.join(postsDirectory, `${id}.md`);
-  const fileContents = fs.readFileSync(fullPath, 'utf8');
-
-  // Use gray-matter to parse the post metadata section
-  const matterResult = matter(fileContents);
-
-  // Use remark to convert markdown into HTML string
-  const processedContent = await remark()
-    .use(html)
-    .process(matterResult.content);
-  const contentHtml = processedContent.toString();
-
-  // Combine the data with the id and contentHtml
-  return {
-    id,
-    contentHtml,
-    ...(matterResult.data as { 
-      date: string; 
-      title: string; 
-      tags?: string[] 
-    }),
-  };
-}
-
-export async function searchPosts(query: string) {
-  const allPosts = await getSortedPostsData();
   
-  if (!query || query.trim() === '') {
-    return allPosts;
-  }
-  
-  const searchTerms = query.toLowerCase().split(' ').filter(term => term.trim() !== '');
-  
-  return allPosts.filter(post => {
-    const postTitle = post.title.toLowerCase();
+  try {
+    const fileContents = fs.readFileSync(fullPath, 'utf8');
+    const matterResult = matter(fileContents);
     
-    // Check if the post title contains any of the search terms
-    return searchTerms.some(term => postTitle.includes(term));
-  });
-}
-
-export async function getAllTags() {
-  const posts = await getSortedPostsData();
-  
-  const allTags = new Set<string>();
-  
-  posts.forEach(post => {
-    const tags = post.tags || [];
-    tags.forEach(tag => allTags.add(tag));
-  });
-  
-  return Array.from(allTags);
-}
-
-export async function getPostsByTag(tag: string) {
-  const posts = await getSortedPostsData();
-  
-  if (!tag) {
-    return posts;
+    const processedContent = await remark()
+      .use(html)
+      .process(matterResult.content);
+    const contentHtml = processedContent.toString();
+    
+    return {
+      id,
+      contentHtml,
+      ...matterResult.data,
+    } as {
+      id: string;
+      contentHtml: string;
+      title: string;
+      date: string;
+      tags?: string[];
+    };
+  } catch (error) {
+    console.error(`Error reading post ${id}:`, error);
+    return null;
   }
+}
+
+// Get all post metadata for listings
+export async function getSortedPostsData() {
+  try {
+    const fileNames = fs.readdirSync(postsDirectory);
+    const allPostsData = await Promise.all(fileNames.map(async (fileName) => {
+      const id = fileName.replace(/\.md$/, '');
+      const fullPath = path.join(postsDirectory, fileName);
+      const fileContents = fs.readFileSync(fullPath, 'utf8');
+      
+      const matterResult = matter(fileContents);
+      
+      return {
+        id,
+        ...matterResult.data as { 
+          date: string;
+          title: string;
+          tags?: string[];
+        },
+      };
+    }));
+    
+    return allPostsData.sort(({ date: a }, { date: b }) => {
+      if (a < b) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
+  } catch (error) {
+    console.error('Error getting sorted posts data:', error);
+    return [];
+  }
+}
+
+// Get posts by tag
+export async function getPostsByTag(tag: string) {
+  const allPosts = await getSortedPostsData();
+  return allPosts.filter((post) => 
+    post.tags?.some((postTag) => 
+      postTag.toLowerCase() === tag.toLowerCase()
+    )
+  );
+}
+
+// Get all unique tags
+export async function getAllTags() {
+  const allPosts = await getSortedPostsData();
+  const tagsSet = new Set<string>();
   
-  return posts.filter(post => {
-    const postTags = post.tags || [];
-    return postTags.includes(tag);
+  allPosts.forEach(post => {
+    if (post.tags) {
+      post.tags.forEach(tag => tagsSet.add(tag.toLowerCase()));
+    }
   });
+  
+  return Array.from(tagsSet);
 }
