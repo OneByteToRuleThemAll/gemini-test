@@ -21,7 +21,7 @@ export default async function Home() {
           <div className="flex flex-wrap justify-center gap-4">
             <Link 
               href="/tags" 
-              className="px-6 py-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full shadow-md hover:shadow-lg transition-all duration-300 text-accent-600 dark:text-accent-400 font-medium"
+              className="px-6 py-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full shadow-md hover:shadow-lg transition-all duration-300 text-accent dark:text-accent-light font-medium"
             >
               Browse Topics
             </Link>
@@ -49,7 +49,7 @@ export default async function Home() {
                   <Link 
                     key={tag} 
                     href={`/tags/${encodeURIComponent(tag)}`}
-                    className="inline-block px-3 py-1 bg-accent-100 dark:bg-accent-900/30 text-accent-600 dark:text-accent-400 rounded-full text-xs font-medium"
+                    className="inline-block px-3 py-1 bg-accent-100 dark:bg-accent-900/30 text-accent-dark dark:text-accent-light rounded-full text-xs font-medium"
                   >
                     #{tag}
                   </Link>
@@ -60,7 +60,7 @@ export default async function Home() {
                 <h3 className="text-2xl md:text-3xl font-serif font-bold mb-4 group-hover:text-glamour-rose dark:group-hover:text-glamour-lavender transition-colors">
                   {featuredPost.title}
                 </h3>
-                <p className="text-gray-500 dark:text-gray-400 mb-4">{featuredPost.date}</p>
+                <p className="text-muted mb-4">{featuredPost.date}</p>
                 <div className="flex justify-end">
                   <span className="inline-flex items-center text-glamour-rose dark:text-glamour-lavender font-medium group-hover:underline">
                     Read more 
@@ -91,7 +91,7 @@ export default async function Home() {
                     <Link 
                       key={tag} 
                       href={`/tags/${encodeURIComponent(tag)}`}
-                      className="inline-block px-2 py-1 bg-accent-100 dark:bg-accent-900/30 text-accent-600 dark:text-accent-400 rounded-full text-xs font-medium"
+                      className="inline-block px-2 py-1 bg-accent-100 dark:bg-accent-900/30 text-accent-dark dark:text-accent-light rounded-full text-xs font-medium"
                     >
                       #{tag}
                     </Link>
@@ -102,7 +102,7 @@ export default async function Home() {
                   <h3 className="text-xl font-serif font-bold mb-2 group-hover:text-glamour-rose dark:group-hover:text-glamour-lavender transition-colors">
                     {title}
                   </h3>
-                  <p className="text-gray-500 dark:text-gray-400 mb-4 text-sm">{date}</p>
+                  <p className="text-muted mb-4 text-sm">{date}</p>
                   <div className="flex justify-end">
                     <span className="inline-flex items-center text-sm text-glamour-rose dark:text-glamour-lavender font-medium group-hover:underline">
                       Read article

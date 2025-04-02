@@ -27,7 +27,7 @@ export default async function Post({ params }: { params: { id: string } }) {
           <h1 className="text-3xl md:text-5xl font-serif font-bold mb-4 bg-gradient-to-r from-glamour-rose via-accent-600 to-primary-500 bg-clip-text text-transparent">
             {postData.title}
           </h1>
-          <div className="text-gray-500 dark:text-gray-400 font-medium mb-6 italic">
+          <div className="text-muted font-medium mb-6 italic">
             Published on {new Date(postData.date).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',
@@ -42,7 +42,7 @@ export default async function Post({ params }: { params: { id: string } }) {
                 <Link 
                   key={tag} 
                   href={`/tags/${encodeURIComponent(tag)}`}
-                  className="inline-block px-4 py-1 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm text-accent-600 dark:text-accent-300 rounded-full text-sm font-medium border border-accent-200 dark:border-accent-800 hover:bg-accent-50 dark:hover:bg-accent-900/30 transition-all duration-200"
+                  className="inline-block px-4 py-1 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm text-accent-dark dark:text-accent-light rounded-full text-sm font-medium border border-accent-200 dark:border-accent-800 hover:bg-accent-50 dark:hover:bg-accent-900/30 transition-all duration-200"
                 >
                   #{tag}
                 </Link>
@@ -74,20 +74,20 @@ export default async function Post({ params }: { params: { id: string } }) {
                       {comment.name.charAt(0).toUpperCase()}
                     </div>
                     <div className="ml-3">
-                      <h3 className="font-medium dark:text-white">{comment.name}</h3>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{comment.email}</p>
+                      <h3 className="font-medium text-gray-800 dark:text-white">{comment.name}</h3>
+                      <p className="text-xs text-muted">{comment.email}</p>
                     </div>
                   </div>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                  <span className="text-sm text-muted">
                     {new Date(comment.createdAt).toLocaleDateString()}
                   </span>
                 </div>
-                <p className="text-gray-700 dark:text-gray-300">{comment.content}</p>
+                <p className="text-gray-800 dark:text-gray-300">{comment.content}</p>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-gray-500 dark:text-gray-400 mb-8 italic text-center">
+          <p className="text-muted mb-8 italic text-center">
             No comments yet. Be the first to share your thoughts!
           </p>
         )}

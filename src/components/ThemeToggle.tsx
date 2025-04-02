@@ -20,8 +20,10 @@ export default function ThemeToggle() {
       
       if (isDarkMode) {
         document.documentElement.classList.add('dark');
+        document.body.classList.add('dark-mode');
       } else {
         document.documentElement.classList.remove('dark');
+        document.body.classList.remove('dark-mode');
       }
       
       setDarkMode(isDarkMode);
@@ -36,8 +38,10 @@ export default function ThemeToggle() {
           
           if (newDarkMode) {
             document.documentElement.classList.add('dark');
+            document.body.classList.add('dark-mode');
           } else {
             document.documentElement.classList.remove('dark');
+            document.body.classList.remove('dark-mode');
           }
         }
       };
@@ -62,20 +66,19 @@ export default function ThemeToggle() {
       if (newDarkMode) {
         // Switch to dark mode
         document.documentElement.classList.add('dark');
-        document.body.classList.add('dark-mode'); // Add this class for additional styling
+        document.body.classList.add('dark-mode');
         localStorage.setItem('theme', 'dark');
-        console.log('Dark mode enabled'); // For debugging
+        console.log('Dark mode enabled');
       } else {
         // Switch to light mode
         document.documentElement.classList.remove('dark');
-        document.body.classList.remove('dark-mode'); // Remove class for light mode
+        document.body.classList.remove('dark-mode');
         localStorage.setItem('theme', 'light');
-        console.log('Light mode enabled'); // For debugging
+        console.log('Light mode enabled');
       }
       
-      // Force a re-layout/repaint to apply Tailwind dark mode classes
+      // Force a re-layout/repaint to apply styles
       document.body.style.display = 'none';
-      // Reading this property causes a reflow
       void document.body.offsetHeight; 
       document.body.style.display = '';
       
@@ -130,13 +133,13 @@ export default function ThemeToggle() {
       title={`Switch to ${darkMode ? 'light' : 'dark'} mode`}
     >
       <div className="absolute inset-0 bg-glamour-gradient opacity-0 dark:opacity-10 transition-opacity duration-300"></div>
-      <div className="relative transform transition-transform duration-500 ease-in-out">
+      <div className="relative transform transition-transform duration-300 ease-in-out">
         {darkMode ? (
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-glamour-gold" viewBox="0 0 20 20" fill="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-amber-300" viewBox="0 0 20 20" fill="currentColor">
             <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
           </svg>
         ) : (
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-glamour-lavender" viewBox="0 0 20 20" fill="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
             <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
           </svg>
         )}

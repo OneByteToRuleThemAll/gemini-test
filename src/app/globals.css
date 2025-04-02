@@ -1,102 +1,124 @@
 @import "tailwindcss";
 
-/* K-pop dream light mode - vibrant and colorful base variables */
+/* Light mode variables - clean and professional with improved contrast */
 :root {
-  --background: linear-gradient(135deg, #fef9f9, #f5e6fa, #e8f5fe);
-  --foreground: #171717;
-  --card-bg: rgba(255, 255, 255, 0.8);
-  --card-border: #ffd1fc;
-  --heading: #9900cc;
-  --muted: #8e67d0;
-  --glamour-glow: 0 0 20px rgba(255, 105, 180, 0.5);
-  --accent-gradient: linear-gradient(45deg, #ff00cc, #3399ff);
-  --accent-shadow: 0 5px 15px rgba(255, 20, 147, 0.4);
-  --border-rainbow: linear-gradient(90deg, #ff00cc, #ff6600, #ffcc00, #33cc33, #3399ff, #9933ff);
+  /* Light theme */
+  --background: #ffffff;
+  --foreground: #1a1a1a;
+  --card-bg: #ffffff;
+  --card-border: #e5e7eb;
+  --heading: #111111;
+  --muted: #4b5563;
+  --accent: #2563eb;
+  --accent-light: #3b82f6;
+  --accent-dark: #1d4ed8;
+  --glamour-rose: #e11d48;
+  --glamour-lavender: #7c3aed;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-/* Dark mode variables - sleek and traditional */
-html.dark {
-  --background: #050505;
-  --foreground: #f0f0f0;
-  --card-bg: #121212;
-  --card-border: #333333;
-  --heading: #ffffff;
-  --muted: #a0a0a0;
-  --glamour-glow: none;
-  --accent-gradient: none;
-  --accent-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-  --border-rainbow: none;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-/* Only apply media query for initial/default theme before JS loads */
+/* Dark mode variables - sleek and professional with improved contrast */
 @media (prefers-color-scheme: dark) {
-  :root:not(.light) {
-    --background: #050505;
-    --foreground: #f0f0f0;
-    --card-bg: #121212;
-    --card-border: #333333;
+  :root {
+    /* Dark theme with better contrast */
+    --background: #111827;
+    --foreground: #f3f4f6;
+    --card-bg: #1f2937;
+    --card-border: #374151;
     --heading: #ffffff;
-    --muted: #a0a0a0;
-    --glamour-glow: none;
-    --accent-gradient: none;
-    --accent-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-    --border-rainbow: none;
+    --muted: #9ca3af;
+    --accent: #3b82f6;
+    --accent-light: #60a5fa;
+    --accent-dark: #2563eb;
+    --glamour-rose: #fb7185;
+    --glamour-lavender: #a78bfa;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
   }
 }
 
 /* Base styles that apply to both light and dark mode */
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-  transition: background 0.5s ease, color 0.3s ease, box-shadow 0.5s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Enhanced light mode styling with k-pop flair */
-body:not(.dark-mode) {
-  background-attachment: fixed;
-}
-
-/* Headers with vibrant colors in light mode */
+/* Headers styling with improved contrast */
 h1, h2, h3, h4, h5, h6 {
   color: var(--heading);
-  transition: color 0.3s ease, text-shadow 0.5s ease;
+  transition: color 0.3s ease;
 }
 
-/* Add glamour to headers in light mode */
-:root:not(.dark) h1,
-:root:not(.dark) h2 {
-  background: var(--accent-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  text-shadow: var(--glamour-glow);
+/* Text contrast classes */
+.text-muted {
+  color: var(--muted);
 }
 
-/* General element transitions */
-p, span, div, a, button {
-  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.5s ease;
+.text-accent {
+  color: var(--accent);
 }
 
-/* Enhanced dark mode styling */
-html.dark body {
-  background: var(--background) !important;
-  color: var(--foreground) !important;
-  box-shadow: none !important;
+/* Card styling with better visibility */
+.card,
+article,
+.bg-white {
+  border: 1px solid var(--card-border);
+  background-color: var(--card-bg);
+  box-shadow: var(--shadow);
 }
 
-/* Rainbow borders for cards in light mode */
-:root:not(.dark) .card,
-:root:not(.dark) article,
-/* Additional Tailwind dark mode helper to ensure dark mode works */
-@layer components {
-  .force-dark {
-    @apply dark:text-white dark:bg-gray-900;
-  }
+/* Dark mode overrides for better contrast */
+html.dark .bg-white,
+html.dark [class*="bg-gray-"][class*="00"] {
+  background-color: var(--card-bg);
+  border-color: var(--card-border);
+}
+
+/* Improved transparent backgrounds for dark mode */
+html.dark .bg-white\/70,
+html.dark .bg-white\/80 {
+  background-color: rgba(31, 41, 55, 0.95);
+  backdrop-filter: blur(8px);
+}
+
+/* Override Tailwind classes with better contrast ratios */
+.text-gray-300 {
+  color: #d1d5db !important;
+}
+
+.text-gray-400 {
+  color: #9ca3af !important;
+}
+
+.text-gray-500 {
+  color: #6b7280 !important;
+}
+
+.text-gray-600 {
+  color: #4b5563 !important;
+}
+
+.text-gray-700 {
+  color: #374151 !important;
+}
+
+html.dark .text-gray-300 {
+  color: #e5e7eb !important;
+}
+
+html.dark .text-gray-400 {
+  color: #d1d5db !important;
+}
+
+html.dark .text-gray-500 {
+  color: #9ca3af !important;
+}
+
+html.dark .text-gray-600 {
+  color: #6b7280 !important;
+}
+
+html.dark .text-gray-700 {
+  color: #4b5563 !important;
 }
