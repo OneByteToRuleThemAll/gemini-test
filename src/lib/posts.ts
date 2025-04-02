@@ -25,7 +25,11 @@ export async function getSortedPostsData() {
     // Combine the data with the id
     return {
       id,
-      ...(matterResult.data as { date: string; title: string }),
+      ...(matterResult.data as { 
+        date: string; 
+        title: string; 
+        tags?: string[] 
+      }),
     };
   });
   // Sort posts by date
@@ -79,6 +83,53 @@ export async function getPostData(id: string) {
   return {
     id,
     contentHtml,
-    ...(matterResult.data as { date: string; title: string }),
+    ...(matterResult.data as { 
+      date: string; 
+      title: string; 
+      tags?: string[] 
+    }),
   };
+}
+
+export async function searchPosts(query: string) {
+  const allPosts = await getSortedPostsData();
+  
+  if (!query || query.trim() === '') {
+    return allPosts;
+  }
+  
+  const searchTerms = query.toLowerCase().split(' ').filter(term => term.trim() !== '');
+  
+  return allPosts.filter(post => {
+    const postTitle = post.title.toLowerCase();
+    
+    // Check if the post title contains any of the search terms
+    return searchTerms.some(term => postTitle.includes(term));
+  });
+}
+
+export async function getAllTags() {
+  const posts = await getSortedPostsData();
+  
+  const allTags = new Set<string>();
+  
+  posts.forEach(post => {
+    const tags = post.tags || [];
+    tags.forEach(tag => allTags.add(tag));
+  });
+  
+  return Array.from(allTags);
+}
+
+export async function getPostsByTag(tag: string) {
+  const posts = await getSortedPostsData();
+  
+  if (!tag) {
+    return posts;
+  }
+  
+  return posts.filter(post => {
+    const postTags = post.tags || [];
+    return postTags.includes(tag);
+  });
 }
