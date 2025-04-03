@@ -11,8 +11,10 @@ export async function generateStaticParams() {
 }
 
 export default async function Post({ params }: { params: { id: string } }) {
-  const postData = await getPostData(params.id);
-  const comments = await getComments(params.id);
+  // Extract the id parameter before using it
+  const id = params?.id;
+  const postData = await getPostData(id);
+  const comments = await getComments(id);
 
   if (!postData) {
     notFound();
@@ -92,7 +94,7 @@ export default async function Post({ params }: { params: { id: string } }) {
           </p>
         )}
         
-        <CommentForm postId={params.id} />
+        <CommentForm postId={id} />
       </div>
     </article>
   );

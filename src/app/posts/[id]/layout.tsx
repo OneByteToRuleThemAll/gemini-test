@@ -7,8 +7,11 @@ export async function generateMetadata({
 }: { 
   params: { id: string } 
 }): Promise<Metadata> {
-  // Ensure params is properly resolved before accessing id
-  const id = params?.id;
+  // Properly await the params object before accessing its properties
+  const resolvedParams = await Promise.resolve(params);
+  const id = resolvedParams.id;
+  
+  // Wait for postData to resolve
   const postData = await getPostData(id);
   
   return {
