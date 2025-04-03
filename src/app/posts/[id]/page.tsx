@@ -11,8 +11,9 @@ export async function generateStaticParams() {
 }
 
 export default async function Post({ params }: { params: { id: string } }) {
-  // Extract the id parameter before using it
-  const id = params?.id;
+  // Properly await the params object before accessing its properties
+  const { id } = await params;
+
   const postData = await getPostData(id);
   const comments = await getComments(id);
 
