@@ -1,5 +1,56 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Project Purpose
+
+* This project is a blog built using Next.js, with a focus on modern web development practices.
+* It demonstrates how to build a simple yet effective blog with features like Server Components, Server Actions, and Static Site Generation with dynamic routes.
+* The blog is designed to be stylish and user-friendly, with a focus on performance and accessibility.
+
+## Tech Stack
+
+* **Next.js**: The primary framework used for building the blog.
+* **React**: Used for building the user interface components.
+* **TypeScript**: Provides static typing for the project.
+* **Tailwind CSS**: Used for styling the blog with utility-first CSS classes.
+* **ESLint**: Ensures code quality and consistency.
+* **React Query**: Manages server state and data fetching.
+* **Zod**: Used for schema validation.
+* **Feed**: Generates RSS feeds for the blog.
+* **Gray-matter**: Parses front matter from markdown files.
+* **Remark**: Processes markdown content.
+* **Vercel**: The platform used for deploying the blog.
+
+## Dependencies
+
+The project has the following dependencies listed in `package.json`:
+
+* @tailwindcss/typography: ^0.5.16
+* @tanstack/react-query: ^5.71.3
+* @tanstack/react-query-devtools: ^5.71.3
+* feed: ^4.2.2
+* gray-matter: ^4.0.3
+* next: 15.2.4
+* react: ^19.0.0
+* react-dom: ^19.0.0
+* remark: ^15.0.1
+* remark-html: ^16.0.1
+* zod: ^3.24.2
+
+## Project Structure
+
+The project has the following structure:
+
+* `src/app/layout.tsx`: Defines the layout for the application.
+* `src/app/page.tsx`: The main page of the application.
+* `src/app/api/log-error/route.ts`: Handles error logging.
+
+## Custom Configurations
+
+The project has custom configurations in the following files:
+
+* `next.config.ts`: Contains custom Next.js configuration options.
+* `eslint.config.mjs`: Contains custom ESLint configuration options.
+
 ## Getting Started
 
 First, run the development server:
