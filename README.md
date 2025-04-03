@@ -1,4 +1,4 @@
-# ✨ Gemini Test: An AI-Powered Next.js Blog Experiment ✨
+# ✨Gemini Test: An AI-Powered Next.js Blog Experiment✨
 
 Welcome to `gemini-test`! 👋 This isn't just *another* Next.js blog. It's a living experiment exploring the capabilities of AI-assisted development, specifically using **Claude** and **Gemini** via the new **"agent" mode in VS Code Insiders**.
 
