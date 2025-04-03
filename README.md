@@ -1,3 +1,9 @@
+# My Next.js Blog
+
+[![Build Status](https://img.shields.io/github/actions/workflow/status/OneByteToRuleThemAll/gemini-test/ci.yml?branch=main)](https://github.com/OneByteToRuleThemAll/gemini-test/actions)
+[![License](https://img.shields.io/github/license/OneByteToRuleThemAll/gemini-test)](https://github.com/OneByteToRuleThemAll/gemini-test/blob/main/LICENSE)
+[![Version](https://img.shields.io/github/package-json/v/OneByteToRuleThemAll/gemini-test)](https://github.com/OneByteToRuleThemAll/gemini-test/releases)
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Project Purpose
@@ -50,6 +56,10 @@ The project has custom configurations in the following files:
 
 * `next.config.ts`: Contains custom Next.js configuration options.
 * `eslint.config.mjs`: Contains custom ESLint configuration options.
+
+## AI Experiment
+
+This project is an experiment to see how well AI can create a blog with minimal supervision. It mostly used Claude and Gemini.
 
 ## Getting Started
 
