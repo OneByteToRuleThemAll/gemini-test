@@ -6,15 +6,15 @@ export default async function RecentPosts({ count = 3 }: { count?: number }) {
   const recentPosts = allPosts.slice(0, count);
   
   return (
-    <div className="mb-8">
-      <h2 className="text-xl font-semibold mb-4">Recent Posts</h2>
-      <div className="space-y-3">
+    <div className="recent-posts">
+      <h2 className="recent-posts-title">Recent Posts</h2>
+      <div className="recent-posts-list">
         {recentPosts.map(({ id, title, date }) => (
-          <div key={id} className="border-l-4 border-blue-500 pl-4">
-            <Link href={`/posts/${id}`} className="text-blue-600 hover:underline">
-              <h3 className="font-medium">{title}</h3>
+          <div key={id} className="recent-post-item">
+            <Link href={`/posts/${id}`} className="recent-post-link">
+              <h3 className="recent-post-title">{title}</h3>
             </Link>
-            <p className="text-sm text-gray-500">{date}</p>
+            <p className="recent-post-date">{date}</p>
           </div>
         ))}
       </div>

@@ -8,29 +8,29 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">About Me</h1>
+    <div className="container" style={{ padding: '0 1.5rem', maxWidth: '800px', margin: '0 auto' }}>
+      <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>About Me</h1>
       
-      <div className="prose prose-lg mb-8">
-        <p>
+      <div style={{ lineHeight: '1.6', color: 'var(--foreground)' }}>
+        <p style={{ marginBottom: '1rem' }}>
           Hi there! I'm a passionate web developer and blogger who loves working with modern JavaScript frameworks, 
           especially Next.js and React.
         </p>
         
-        <p>
+        <p style={{ marginBottom: '1rem' }}>
           This blog was built using Next.js App Router, with a focus on Server Components and Server Actions. 
           It demonstrates how to build a simple yet effective blog with:
         </p>
         
-        <ul>
-          <li>Markdown for content management</li>
-          <li>Server Components for improved performance</li>
-          <li>Server Actions for data operations</li>
-          <li>Static Site Generation with dynamic routes</li>
-          <li>Tailwind CSS for styling</li>
+        <ul style={{ marginLeft: '1.5rem', marginBottom: '1.5rem', listStyleType: 'disc' }}>
+          <li style={{ marginBottom: '0.5rem' }}>Markdown for content management</li>
+          <li style={{ marginBottom: '0.5rem' }}>Server Components for improved performance</li>
+          <li style={{ marginBottom: '0.5rem' }}>Server Actions for data operations</li>
+          <li style={{ marginBottom: '0.5rem' }}>Static Site Generation with dynamic routes</li>
+          <li style={{ marginBottom: '0.5rem' }}>Custom CSS for styling (converted from Tailwind)</li>
         </ul>
         
-        <p>
+        <p style={{ marginBottom: '1rem' }}>
           Feel free to browse my posts and reach out if you have any questions or suggestions!
         </p>
       </div>

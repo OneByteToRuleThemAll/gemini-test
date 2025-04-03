@@ -34,26 +34,33 @@ export default async function TagPage({ params }: TagPageProps) {
   }
   
   return (
-    <div className="max-w-4xl mx-auto px-4">
+    <div className="container" style={{ padding: '0 1.5rem' }}>
       <h1 className="text-3xl font-bold mb-2">Posts tagged with "{decodedTag}"</h1>
-      <p className="text-gray-600 mb-8">
+      <p className="mb-8" style={{ color: 'var(--muted)' }}>
         {posts.length} post{posts.length > 1 ? 's' : ''}
       </p>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid" style={{ gridTemplateColumns: '1fr', gap: '1.5rem' }}>
         {posts.map((post) => (
-          <div key={post.id} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-            <Link href={`/posts/${post.id}`} className="text-xl font-medium text-blue-600 hover:underline">
-              <h2>{post.title}</h2>
+          <div key={post.id} className="card" style={{ padding: '1.5rem' }}>
+            <Link href={`/posts/${post.id}`} style={{ color: 'var(--color-primary)', fontWeight: 500, textDecoration: 'none' }}>
+              <h2 className="text-xl">{post.title}</h2>
             </Link>
-            <p className="text-gray-500 mt-2">{post.date}</p>
+            <p className="mt-2" style={{ color: 'var(--muted)' }}>{post.date}</p>
             
-            <div className="mt-4 flex flex-wrap gap-2">
+            <div className="mt-4 flex gap-2" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
               {post.tags?.map((tag) => (
                 <Link 
                   key={tag} 
                   href={`/tags/${encodeURIComponent(tag)}`}
-                  className="inline-block bg-gray-100 px-2 py-1 text-sm text-gray-700 rounded hover:bg-gray-200"
+                  style={{ 
+                    display: 'inline-block', 
+                    padding: '0.25rem 0.5rem', 
+                    fontSize: '0.875rem',
+                    color: 'var(--muted-foreground)',
+                    backgroundColor: 'var(--card-border)',
+                    borderRadius: '0.25rem'
+                  }}
                 >
                   #{tag}
                 </Link>
@@ -63,8 +70,8 @@ export default async function TagPage({ params }: TagPageProps) {
         ))}
       </div>
       
-      <div className="mt-8">
-        <Link href="/tags" className="text-blue-600 hover:underline">
+      <div className="mt-8" style={{ paddingBottom: '2rem' }}>
+        <Link href="/tags" style={{ color: 'var(--color-primary)' }}>
           ← View all tags
         </Link>
       </div>

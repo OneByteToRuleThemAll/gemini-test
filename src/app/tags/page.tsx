@@ -18,19 +18,22 @@ export default async function TagsPage() {
   });
   
   return (
-    <div className="max-w-4xl mx-auto px-4">
-      <h1 className="text-3xl font-bold mb-6">Tags</h1>
+    <div className="container">
+      <h1 className="text-2xl font-bold mb-4">Tags</h1>
       
       {tags.length > 0 ? (
-        <div className="flex flex-wrap gap-4">
+        <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
           {tags.map(tag => (
             <Link
               key={tag}
               href={`/tags/${encodeURIComponent(tag)}`}
-              className="bg-white px-4 py-3 rounded-lg shadow-md hover:shadow-lg transition-shadow text-lg"
+              className="card"
+              style={{ padding: '1rem', textDecoration: 'none' }}
             >
-              <span className="font-medium text-blue-600">#{tag}</span>
-              <span className="ml-2 text-gray-500 text-sm">({tagCounts[tag]} post{tagCounts[tag] !== 1 ? 's' : ''})</span>
+              <span style={{ fontWeight: 500, color: 'var(--color-primary)' }}>#{tag}</span>
+              <span style={{ marginLeft: '0.5rem', color: 'var(--muted)' }}>
+                ({tagCounts[tag]} post{tagCounts[tag] !== 1 ? 's' : ''})
+              </span>
             </Link>
           ))}
         </div>

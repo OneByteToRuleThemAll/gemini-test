@@ -19,15 +19,15 @@ export default async function Post({ params }: { params: { id: string } }) {
   }
 
   return (
-    <article className="max-w-4xl mx-auto">
+    <article className="post-article">
       {/* Post Header */}
-      <div className="relative overflow-hidden rounded-2xl mb-8">
-        <div className="absolute inset-0 bg-glamour-gradient opacity-10 dark:opacity-20 z-0"></div>
-        <div className="relative z-10 px-6 py-12 text-center">
-          <h1 className="text-3xl md:text-5xl font-serif font-bold mb-4 bg-gradient-to-r from-glamour-rose via-accent-600 to-primary-500 bg-clip-text text-transparent">
+      <div className="post-header">
+        <div className="post-header-bg"></div>
+        <div className="post-header-content">
+          <h1 className="text-gradient">
             {postData.title}
           </h1>
-          <div className="text-muted font-medium mb-6 italic">
+          <div className="post-date">
             Published on {new Date(postData.date).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',
@@ -37,12 +37,12 @@ export default async function Post({ params }: { params: { id: string } }) {
           
           {/* Display tags if they exist */}
           {postData.tags && postData.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 justify-center">
+            <div className="post-tags">
               {postData.tags.map(tag => (
                 <Link 
                   key={tag} 
                   href={`/tags/${encodeURIComponent(tag)}`}
-                  className="inline-block px-4 py-1 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm text-accent-dark dark:text-accent-light rounded-full text-sm font-medium border border-accent-200 dark:border-accent-800 hover:bg-accent-50 dark:hover:bg-accent-900/30 transition-all duration-200"
+                  className="post-tag"
                 >
                   #{tag}
                 </Link>
@@ -53,41 +53,41 @@ export default async function Post({ params }: { params: { id: string } }) {
       </div>
 
       {/* Post Content */}
-      <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 md:p-10 mb-12">
+      <div className="post-content-container">
         <PostContent contentHtml={postData.contentHtml} />
       </div>
       
       {/* Comments Section */}
-      <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 md:p-10">
-        <h2 className="text-2xl font-display font-bold mb-8 relative pb-2 inline-block">
-          <span className="relative z-10">Comments ({comments.length})</span>
-          <span className="absolute bottom-0 left-0 h-1 w-full bg-glamour-gradient"></span>
+      <div className="comments-section">
+        <h2 className="comments-title">
+          <span>Comments ({comments.length})</span>
+          <span className="comments-title-line"></span>
         </h2>
         
         {comments.length > 0 ? (
-          <div className="space-y-6 mb-10">
+          <div className="comments-list">
             {comments.map((comment) => (
-              <div key={comment.id} className="bg-white dark:bg-gray-750 rounded-xl p-6 shadow-md">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-glamour-rose to-glamour-lavender flex items-center justify-center text-white font-bold text-lg">
+              <div key={comment.id} className="comment">
+                <div className="comment-header">
+                  <div className="comment-user">
+                    <div className="comment-avatar">
                       {comment.name.charAt(0).toUpperCase()}
                     </div>
-                    <div className="ml-3">
-                      <h3 className="font-medium text-gray-800 dark:text-white">{comment.name}</h3>
-                      <p className="text-xs text-muted">{comment.email}</p>
+                    <div className="comment-user-info">
+                      <h3 className="comment-user-name">{comment.name}</h3>
+                      <p className="comment-user-email">{comment.email}</p>
                     </div>
                   </div>
-                  <span className="text-sm text-muted">
+                  <span className="comment-date">
                     {new Date(comment.createdAt).toLocaleDateString()}
                   </span>
                 </div>
-                <p className="text-gray-800 dark:text-gray-300">{comment.content}</p>
+                <p className="comment-content">{comment.content}</p>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-muted mb-8 italic text-center">
+          <p className="no-comments">
             No comments yet. Be the first to share your thoughts!
           </p>
         )}
