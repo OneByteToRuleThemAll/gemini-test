@@ -13,7 +13,7 @@ export default function AboutPage() {
       
       <div style={{ lineHeight: '1.6', color: 'var(--foreground)' }}>
         <p style={{ marginBottom: '1rem' }}>
-          Hi there! I'm a passionate web developer and blogger who loves working with modern JavaScript frameworks, 
+          Hi there! I&apos;m a passionate web developer and blogger who loves working with modern JavaScript frameworks, 
           especially Next.js and React.
         </p>
         

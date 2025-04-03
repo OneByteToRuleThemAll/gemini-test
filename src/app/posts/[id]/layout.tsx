@@ -19,10 +19,8 @@ export async function generateMetadata({
 
 export default function PostLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: { id: string };
 }) {
   return (
     <div className="max-w-prose mx-auto">

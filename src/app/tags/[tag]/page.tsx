@@ -35,7 +35,7 @@ export default async function TagPage({ params }: TagPageProps) {
   
   return (
     <div className="container" style={{ padding: '0 1.5rem' }}>
-      <h1 className="text-3xl font-bold mb-2">Posts tagged with "{decodedTag}"</h1>
+      <h1 className="text-3xl font-bold mb-2">Posts tagged with &ldquo;{decodedTag}&rdquo;</h1>
       <p className="mb-8" style={{ color: 'var(--muted)' }}>
         {posts.length} post{posts.length > 1 ? 's' : ''}
       </p>
